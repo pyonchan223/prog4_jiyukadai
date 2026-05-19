@@ -13,7 +13,7 @@ public final class ExpenseTransactionFactory implements TransactionFactory {
         return new Transaction(
                 category,
                 amount,
-                Transaction.Type.EXPENSE,
+                Transaction.TransactionKind.EXPENSE,
                 date);
     }
 }

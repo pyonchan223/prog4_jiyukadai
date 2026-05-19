@@ -5,8 +5,8 @@ import java.time.LocalDate;
 //sealed インターフェースでFactory Method パターンを実装
 public sealed interface TransactionFactory permits IncomeTransactionFactory, ExpenseTransactionFactory {
     
-    static TransactionFactory of(Transaction.Type type) {
-        return switch(type) {
+    static TransactionFactory of(Transaction.TransactionKind kind) {
+        return switch(kind) {
             case INCOME -> new IncomeTransactionFactory();
             case EXPENSE -> new ExpenseTransactionFactory();
         };

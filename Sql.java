@@ -14,6 +14,8 @@ public class Sql {
     public static Connection con = null;
     public static PreparedStatement pstmt = null;
     
+
+    //SQLの接続を初期化(プログラムの最初に実行)
     public static void sqlInit() {
         try{
             Class.forName("org.sqlite.JDBC");

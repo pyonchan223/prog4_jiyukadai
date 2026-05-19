@@ -26,9 +26,12 @@ public class Sql {
     //SQLのtableのデータ数を返す。
     public static int getDataNum() {
         try{
-            pstmt = con.prepareStatement("SELECT COUNT(*) FROM" + table);
+            pstmt = con.prepareStatement("SELECT COUNT(*) FROM " + table);
             ResultSet rs = pstmt.executeQuery();
-            return rs.getInt(1);
+            if(rs.next()){
+                return rs.getInt(1);
+            }
+            return 0;
         }catch(Exception e){
             e.printStackTrace();
             return 0;
@@ -38,16 +41,15 @@ public class Sql {
     //SQLからデータを1つ取得し、Transactionインスタンスにして返す。
     public static Transaction readDB(int id) {
         try{
-            pstmt = con.prepareStatement("SELECT * FROM ? WHERE id = ?");
-            pstmt.setString(1,table);
-            pstmt.setInt(2,id);
+            pstmt = con.prepareStatement("SELECT * FROM test WHERE id = ?");
+            pstmt.setInt(1,id);
             ResultSet rs = pstmt.executeQuery();
             if(rs.next()){
                 String categoryName = rs.getString("category");
                 Category category = Category.valueOf(categoryName);
                 int amount = rs.getInt("amount");
                 String typeName = rs.getString("type");
-                TransactionKind type = TransactionKind.valueOf(typeName);
+                Type type = Type.valueOf(typeName);
                 String dateText = rs.getString("date");
                 LocalDate date = LocalDate.parse(dateText);
 
@@ -65,7 +67,7 @@ public class Sql {
     //SQLからデータをすべて取得し、TransactionのArrayListで返す。
     public static ArrayList<Transaction> readDBAll(){
         ArrayList<Transaction> list = new ArrayList<>();
-        for(int id = 1; id < getDataNum(); id++) {
+        for(int id = 1; id <= getDataNum(); id++) {
             list.add(readDB(id));
         }
         return list;
@@ -75,6 +77,8 @@ public class Sql {
     public static void main(String[] args) {
         sqlInit();
         ArrayList<Transaction> list = readDBAll();
+        System.out.println(getDataNum());
+        System.out.println(list.size());
         for(int i=0; i<list.size(); i++){
             System.out.println(list.get(i));
         }

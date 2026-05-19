@@ -12,7 +12,7 @@ public class Graph {
 
         // 月ごとの収入データを抽出
         for (Transaction transaction : transactions) {
-            if (transaction.getType() == Transaction.Type.INCOME) {
+            if (transaction.getType() == Transaction.TransactionKind.INCOME) {
                 int month = transaction.getDate().getMonthValue();
                 int amount = transaction.getAmount();
                 monthlyIncomes.put(month, monthlyIncomes.getOrDefault(month, 0) + amount);
@@ -31,7 +31,7 @@ public class Graph {
 
         // ArrayListを合計して、月ごとの支出データを抽出
         for (Transaction transaction : transactions) {
-            if (transaction.getType() == Transaction.Type.EXPENSE) {
+            if (transaction.getType() == Transaction.TransactionKind.EXPENSE) {
                 int month = transaction.getDate().getMonthValue();
                 int amount = transaction.getAmount();
                 monthlyExpenses.put(month, monthlyExpenses.getOrDefault(month, 0) + amount);

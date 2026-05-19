@@ -15,7 +15,7 @@ public class Calendar {
         //ArrayList<Transaction>から日付と金額を抽出して、日付をキー、金額を値とするMapに格納する
         Map<Integer, Integer> incomes = new HashMap<>();
         for (Transaction transaction : transactions) {
-            if (transaction.getType() == Transaction.Type.INCOME) {
+            if (transaction.getType() == Transaction.TransactionKind.INCOME) {
                 int day = transaction.getDate().getDayOfMonth();
                 int amount = transaction.getAmount();
                 // 同じ日に複数の収入がある場合は、金額を合算する
@@ -29,7 +29,7 @@ public class Calendar {
         // 支出データ（赤色で表示）
         Map<Integer, Integer> expenses = new HashMap<>();
         for (Transaction transaction : transactions) {
-            if (transaction.getType() == Transaction.Type.EXPENSE) {
+            if (transaction.getType() == Transaction.TransactionKind.EXPENSE) {
                 int day = transaction.getDate().getDayOfMonth();
                 int amount = transaction.getAmount();
                 // 同じ日に複数の支出がある場合は、金額を合算する

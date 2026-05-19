@@ -14,7 +14,7 @@ public final class IncomeTransactionFactory implements TransactionFactory {
         return new Transaction(
                 category,
                 amount,
-                Transaction.Type.INCOME,
+                Transaction.TransactionKind.INCOME,
                 date);
     }
 }

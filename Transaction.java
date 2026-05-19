@@ -5,7 +5,7 @@ import java.util.Objects;
 
 public class Transaction {
     // 収支の種類を表す列挙型
-    public enum Type {
+    public enum TransactionKind {
         EXPENSE, INCOME
     }
 
@@ -18,31 +18,31 @@ public class Transaction {
     private int id;
     private final Category category;
     private final int amount;
-    private final Type type;
+    private final TransactionKind kind;
     private final LocalDate date;
 
     // 新規作成時に使用するコンストラクタ
     // idはデータベースで自動生成されるため、コンストラクタには含めない
     // requiredなフィールドはnullを許容しないようにする
-    public Transaction(Category category, int amount, Type type, LocalDate date) {
+    public Transaction(Category category, int amount, TransactionKind kind, LocalDate date) {
         this.category = Objects.requireNonNull(category, "カテゴリはnullであってはなりません");
         if (amount < 0) {
             throw new IllegalArgumentException("金額は0以上でなければなりません");
         }
         this.amount = amount;
-        this.type = Objects.requireNonNull(type, "タイプはnullであってはなりません");
+        this.kind = Objects.requireNonNull(kind, "種類はnullであってはなりません");
         this.date = Objects.requireNonNull(date, "日付はnullであってはなりません");
     }
 
     // データベースから読み込む際に使用するコンストラクタ
-    public Transaction(int id, Category category, int amount, Type type, LocalDate date) {
+    public Transaction(int id, Category category, int amount, TransactionKind kind, LocalDate date) {
         this.id = id;
         this.category = Objects.requireNonNull(category, "カテゴリはnullであってはなりません");
         if (amount < 0) {
             throw new IllegalArgumentException("金額は0以上でなければなりません");
         }
         this.amount = amount;
-        this.type = Objects.requireNonNull(type, "タイプはnullであってはなりません");
+        this.kind = Objects.requireNonNull(kind, "種類はnullであってはなりません");
         this.date = Objects.requireNonNull(date, "日付はnullであってはなりません");
     }
 
@@ -54,12 +54,16 @@ public class Transaction {
         return amount;
     }
 
+    public TransactionKind getKind() {
+        return kind;
+    }
+
     public Category getCategory() {
         return category;
     }
 
-    public Type getType() {
-        return type;
+    public TransactionKind getType() {
+        return kind;
     }
 
     public LocalDate getDate() {
@@ -72,7 +76,7 @@ public class Transaction {
                 "id=" + id +
                 ", category=" + category +
                 ", amount=" + amount +
-                ", type=" + type +
+                ", type=" + kind +
                 ", date=" + date +
                 '}';
     }

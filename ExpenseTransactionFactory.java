@@ -3,7 +3,7 @@ package prog4_jiyukadai;
 import java.time.LocalDate;
 
 //支出用のFactory
-public class ExpenseTransactionFactory extends TransactionFactory {
+public final class ExpenseTransactionFactory extends TransactionFactory {
 
     @Override
     public Transaction createTransaction(

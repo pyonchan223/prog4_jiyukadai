@@ -5,9 +5,9 @@ public class Graph {
     public static final String RESET = "\u001b[0m"; // 色を元に戻す
     public static final String RED = "\u001b[31m"; // 文字を赤色にする
     public static final String BLUE = "\u001b[34m"; // 文字を青色にする
+    public static final String GREEN = "\u001b[32m"; // 文字を緑色にする
 
     public static void displayIncomes(ArrayList<Transaction> transactions, int year) throws IllegalArgumentException {
-        // LinkedHashMapを使うことで、追加した順（1月〜12月）を維持します
         Map<Integer, Integer> monthlyIncomes = new LinkedHashMap<>();
 
         // 月ごとの収入データを抽出
@@ -17,7 +17,11 @@ public class Graph {
                 int amount = transaction.getAmount();
                 monthlyIncomes.put(month, monthlyIncomes.getOrDefault(month, 0) + amount);
             }
+            if (transaction.getDate().getYear() != year) {
+                throw new IllegalArgumentException("すべての取引は同じ年でなければなりません");
+            }
         }
+    
         System.out.println("【月別 収入グラフ（" + year + "年）】");
         System.out.println("------------------------------------------------------------");
 
@@ -26,15 +30,17 @@ public class Graph {
     }   
 
     public static void displayExpenses(ArrayList<Transaction> transactions, int year) throws IllegalArgumentException {
-        // LinkedHashMapを使うことで、追加した順（1月〜12月）を維持します
         Map<Integer, Integer> monthlyExpenses = new LinkedHashMap<>();
 
-        // ArrayListを合計して、月ごとの支出データを抽出
+        // 月ごとの支出データを抽出
         for (Transaction transaction : transactions) {
             if (transaction.getType() == Transaction.TransactionKind.EXPENSE) {
                 int month = transaction.getDate().getMonthValue();
                 int amount = transaction.getAmount();
                 monthlyExpenses.put(month, monthlyExpenses.getOrDefault(month, 0) + amount);
+            }
+            if (transaction.getDate().getYear() != year) {
+                throw new IllegalArgumentException("すべての取引は同じ年でなければなりません");
             }
         }
     
@@ -43,6 +49,30 @@ public class Graph {
         
         // グラフを表示するメソッドを呼び出す
         showGraph(monthlyExpenses, RED);
+    }
+
+    public static void displayBalances(ArrayList<Transaction> transactions, int year) throws IllegalArgumentException {
+        Map<Integer, Integer> monthlyBalances = new LinkedHashMap<>();
+
+        // 月ごとの貯金データを抽出
+        for (Transaction transaction : transactions) {
+            int month = transaction.getDate().getMonthValue();
+            int amount = transaction.getAmount();
+            if (transaction.getType() == Transaction.TransactionKind.INCOME) {
+                monthlyBalances.put(month, monthlyBalances.getOrDefault(month, 0) + amount);
+            } else if (transaction.getType() == Transaction.TransactionKind.EXPENSE) {
+                monthlyBalances.put(month, monthlyBalances.getOrDefault(month, 0) - amount);
+            }
+            if (transaction.getDate().getYear() != year) {
+                throw new IllegalArgumentException("すべての取引は同じ年でなければなりません");
+            }
+        }
+    
+        System.out.println("【月別 貯金グラフ（" + year + "年）】");
+        System.out.println("------------------------------------------------------------");
+        
+        // グラフを表示するメソッドを呼び出す
+        showGraph(monthlyBalances, GREEN); // 貯金は緑色で表示
     }
 
     private static void showGraph(Map<Integer, Integer> monthlyExpenses, String color) {
